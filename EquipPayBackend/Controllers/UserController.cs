@@ -2,6 +2,7 @@
 using EquipPayBackend.DTOs.UserDTO;
 using EquipPayBackend.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EquipPayBackend.Controllers
 {
@@ -15,29 +16,38 @@ namespace EquipPayBackend.Controllers
              _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             }
             [HttpPost]
-            public async Task<IActionResult> AddUser(AddUserDTO userDTO)
+        public async Task<IActionResult> AddUser(AddUserDTO userDTO)
+        {
+            try
             {
-                try
-                {
-                    return Ok(await _userService.AddUser(userDTO));
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    return NotFound(new { Message = ex.Message });
-                }
-                catch (ArgumentException ex)
-                {
-                    return BadRequest(new { Message = ex.Message });
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return Conflict(new { Message = ex.Message });
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error" });
-                }
+                return Ok(await _userService.AddUser(userDTO));
             }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handle database update exceptions
+                if (ex.InnerException != null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { Message = $"Database error: {ex.InnerException.Message}" });
+                }
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Database error: An error occurred while saving the entity changes." });
+            }
+            catch (Exception ex)
+            {
+                // Return a generic error message for unexpected exceptions
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error: " + ex.Message });
+            }
+        }
+
+
+
 
 
 

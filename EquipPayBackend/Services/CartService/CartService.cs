@@ -17,16 +17,16 @@ namespace EquipPayBackend.Services.CartService
             _mapper = mapper;
         }
 
-        public async Task<Cart> AddToCart(AddToCartDTO DTO)
-        {
+        //public async Task<Cart> AddToCart(AddToCartDTO DTO)
+        //{
 
-            var user = await _context.UserAccounts.FindAsync(DTO.CustomerId);
-            var recipe = await _context.Recipes.FindAsync(DTO.RecipeId);
-            var order = new Cart
-            {
-                IsPaid = false,
+        //    var user = await _context.UserAccounts.FindAsync(DTO.CustomerId);
+        //    var recipe = await _context.Recipes.FindAsync(DTO.RecipeId);
+        //    var order = new Cart
+        //    {
+        //        IsPaid = false,
 
-            };
-        }
+        //    };
+        //}
     }
 }

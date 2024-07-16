@@ -50,10 +50,11 @@ namespace EquipPayBackend.Services.UserService
                 Phone = userDTO.Phone,
                 DateOfBirth = userDTO.DateOfBirth,
                 UserGender = userDTO.UserGender,
-                IsCurrentlyActive = true
+                IsCurrentlyActive = true,
+                Image = userDTO.Image,
 
             };
-
+            userAccount.UserID = user.UserId;
             user.UserAccount = userAccount;
             await _context.UserInfos.AddAsync(user);
             await _context.SaveChangesAsync(); // Save changes to the database
@@ -72,6 +73,7 @@ namespace EquipPayBackend.Services.UserService
             {
                 var recordDTOs = user.Select(r => new DisplayUserDTO
                 {
+                    userID = r.UserAccountId,
                     userGender = r.UserGender,
                     FullName = r.UserFullName,
                     Phone = r.Phone,

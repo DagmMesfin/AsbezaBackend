@@ -4,14 +4,16 @@ namespace EquipPayBackend.DTOs.UserDTO
 {
     public class AddUserDTO
     {
-        public string UserFullName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Phone { get; set; } = null!;
+        public string UserFullName { get; set; } 
+        public string Email { get; set; } 
+        public string Phone { get; set; } 
         public DateTime DateOfBirth { get; set; }
-        public string UserGender { get; set; } = string.Empty;
-        public string UserName { get; set; } = null!;
+        public string UserGender { get; set; } 
+        public string UserName { get; set; } 
         public string Password { get; set; }
         public string RoleName { get; set; }
+
+        public string Image { get; set; }
     }
 }
 
