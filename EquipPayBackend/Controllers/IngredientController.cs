@@ -1,29 +1,30 @@
 ﻿using EquipPayBackend.DTOs;
+using EquipPayBackend.DTOs.IngredientDTO;
 using EquipPayBackend.DTOs.RoleDTO;
-using EquipPayBackend.Services.RoleService;
+using EquipPayBackend.DTOs.UserDTO;
+using EquipPayBackend.Services.IngredientService;
+using EquipPayBackend.Services.UserService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace EquipPayBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    public class IngredientController : ControllerBase
     {
-        private readonly IRoleService _roleService;
 
-        public RoleController(IRoleService roleService)
+        private readonly IIngredientService _ingredientService;
+        public IngredientController(IIngredientService ingredientService)
         {
-            _roleService = roleService;
+            _ingredientService = ingredientService ?? throw new ArgumentNullException(nameof(ingredientService));
         }
-
         [HttpPost]
-        public async Task<ActionResult> CreateRole(AddRoleDTO roleDTO)
+        public async Task<IActionResult> AddIngredient(AddIngredientDTO ingredientDTO)
         {
             try
             {
-                return Ok(await _roleService.AddRole(roleDTO));
+                return Ok(await _ingredientService.PostIngredient(ingredientDTO));
             }
             catch (KeyNotFoundException ex)
             {
@@ -42,13 +43,12 @@ namespace EquipPayBackend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error" });
             }
         }
-
         [HttpDelete]
-        public async Task<ActionResult> DeleteRole([FromQuery] IdDTO DTO)
+        public async Task<ActionResult> DeleteIngredient([FromQuery] IdDTO DTO)
         {
             try
             {
-                return Ok(await _roleService.DeleteRole(DTO));
+                return Ok(await _ingredientService.DeleteIngredient(DTO));
             }
             catch (KeyNotFoundException ex)
             {
@@ -67,13 +67,12 @@ namespace EquipPayBackend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error" });
             }
         }
-
         [HttpGet]
-        public async Task<ActionResult> GetRoles()
+        public async Task<ActionResult> GetIngredients()
         {
             try
             {
-                var roles = await _roleService.GetRoles();
+                var roles = await _ingredientService.GetIngredients();
                 return Ok(roles);
             }
             catch (KeyNotFoundException ex)
@@ -93,13 +92,37 @@ namespace EquipPayBackend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error" });
             }
         }
-
-        [HttpPut]
-        public async Task<ActionResult> UpdateRole(UpdateRoleDTO roleDTO)
+        [HttpGet("GetSpecificIngredient")]
+        public async Task<ActionResult> GetSpecificIngredient([FromQuery] IdDTO DTO)
         {
             try
             {
-                return Ok(await _roleService.UpdateRole(roleDTO));
+                var roles = await _ingredientService.GetIngredient(DTO);
+                return Ok(roles);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "Internal Server Error" });
+            }
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateRecipe(UpgradeIngredientDTO DTO)
+        {
+            try
+            {
+                return Ok(await _ingredientService.UpdateIngredient(DTO));
             }
             catch (KeyNotFoundException ex)
             {

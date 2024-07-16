@@ -1,4 +1,6 @@
-﻿using EquipPayBackend.Services.RoleService;
+﻿using EquipPayBackend.Services.IngredientService;
+using EquipPayBackend.Services.RecipeService;
+using EquipPayBackend.Services.RoleService;
 using EquipPayBackend.Services.Tools;
 using EquipPayBackend.Services.UserService;
 
@@ -15,6 +17,9 @@ namespace EquipPayBackend
                 services.AddScoped<IUserService, UserService>();
 
                 services.AddScoped<IRoleService, RoleService>();
+                
+                services.AddScoped<IIngredientService, IngredientService>();
+                services.AddScoped<IRecipeService, RecipeService>();
             }
 
         }

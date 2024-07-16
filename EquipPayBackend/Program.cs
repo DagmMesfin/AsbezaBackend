@@ -5,6 +5,8 @@ using EquipPayBackend.Services.Tools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
+using EquipPayBackend.Services.IngredientService;
+using EquipPayBackend.Services.RecipeService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IToolsService, ToolsService>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>

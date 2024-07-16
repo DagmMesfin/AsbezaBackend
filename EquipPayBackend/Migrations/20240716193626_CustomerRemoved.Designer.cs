@@ -4,6 +4,7 @@ using EquipPayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EquipPayBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240716193626_CustomerRemoved")]
+    partial class CustomerRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,25 +64,8 @@ namespace EquipPayBackend.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ReceiptNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RecipeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RecipeIngredientId")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserAccountId")
                         .HasColumnType("int");
@@ -88,9 +74,38 @@ namespace EquipPayBackend.Migrations
 
                     b.HasIndex("UserAccountId");
 
-                    b.HasIndex("RecipeId", "RecipeIngredientId");
-
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("EquipPayBackend.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("IngredientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecipeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("EquipPayBackend.Models.Recipe", b =>
@@ -265,20 +280,35 @@ namespace EquipPayBackend.Migrations
             modelBuilder.Entity("EquipPayBackend.Models.Order", b =>
                 {
                     b.HasOne("EquipPayBackend.Models.UserAccount", "User")
-                        .WithMany("Orders")
+                        .WithMany()
                         .HasForeignKey("UserAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EquipPayBackend.Models.RecipeIngredient", "Recipe")
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EquipPayBackend.Models.OrderItem", b =>
+                {
+                    b.HasOne("EquipPayBackend.Models.Ingredient", "Ingredient")
                         .WithMany()
-                        .HasForeignKey("RecipeId", "RecipeIngredientId")
+                        .HasForeignKey("IngredientId");
+
+                    b.HasOne("EquipPayBackend.Models.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Recipe");
+                    b.HasOne("EquipPayBackend.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId");
 
-                    b.Navigation("User");
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Recipe");
                 });
 
             modelBuilder.Entity("EquipPayBackend.Models.RecipeIngredient", b =>
@@ -322,6 +352,11 @@ namespace EquipPayBackend.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("EquipPayBackend.Models.Order", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("EquipPayBackend.Models.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
@@ -334,8 +369,6 @@ namespace EquipPayBackend.Migrations
 
             modelBuilder.Entity("EquipPayBackend.Models.UserAccount", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("UserInfo");
                 });
 #pragma warning restore 612, 618

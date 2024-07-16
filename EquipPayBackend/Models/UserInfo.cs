@@ -20,5 +20,7 @@ namespace EquipPayBackend.Models
         public int UserAccountId { get; set; }
 
         public UserAccount? UserAccount { get; set; }
+
+        public string Image { get; set; }
     }
 }

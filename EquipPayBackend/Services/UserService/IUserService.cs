@@ -1,4 +1,5 @@
-﻿using EquipPayBackend.DTOs.LoginDTO;
+﻿using EquipPayBackend.DTOs;
+using EquipPayBackend.DTOs.LoginDTO;
 using EquipPayBackend.DTOs.UserDTO;
 using EquipPayBackend.Models;
 
@@ -8,9 +9,9 @@ namespace EquipPayBackend.Services.UserService
     {
         Task<UserInfo> AddUser(AddUserDTO userDTO);
         Task<string> ChangePassword(ChangePasswordDTO DTO);
-        Task<UserAccount> DeleteUser(int id);
+        Task<UserAccount> DeleteUser(IdDTO DTO);
         Task<List<DisplayUserDTO>> GetAllUsers();
-        Task<UserAccount> GetUserByID(int id);
+        Task<UserAccount> GetUserByID(IdDTO DTO);
         Task<DisplayUserDTO> Login(LoginDTO login);
         Task<UserAccount> UpdateUserAccount(UpdateUserDTO userDTO);
     }

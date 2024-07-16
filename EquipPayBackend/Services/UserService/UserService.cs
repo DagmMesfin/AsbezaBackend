@@ -6,6 +6,7 @@ using EquipPayBackend.Models;
 using EquipPayBackend.DTOs.UserDTO;
 using EquipPayBackend.DTOs.LoginDTO;
 using Microsoft.EntityFrameworkCore;
+using EquipPayBackend.DTOs;
 namespace EquipPayBackend.Services.UserService
 
 {
@@ -93,10 +94,10 @@ namespace EquipPayBackend.Services.UserService
             }
         }
 
-        public async Task<UserAccount> DeleteUser(int id)
+        public async Task<UserAccount> DeleteUser(IdDTO DTO)
         {
             var user = await _context.UserAccounts
-                                   .FirstOrDefaultAsync(e => e.UserAccountId == id);
+                                   .FirstOrDefaultAsync(e => e.UserAccountId == DTO.Id);
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
@@ -108,12 +109,12 @@ namespace EquipPayBackend.Services.UserService
             return user;
         }
 
-        public async Task<UserAccount> GetUserByID(int id)
+        public async Task<UserAccount> GetUserByID(IdDTO DTO)
         {
             var user = await _context.UserAccounts
                             .Include(e => e.UserInfo)
                             .Include(ua => ua.Role)
-                            .FirstOrDefaultAsync(e => e.UserAccountId == id && e.UserInfo.IsCurrentlyActive == true)
+                            .FirstOrDefaultAsync(e => e.UserAccountId == DTO.Id && e.UserInfo.IsCurrentlyActive == true)
                             ?? throw new KeyNotFoundException("Emp not found");
  
             return user;
@@ -205,5 +206,7 @@ namespace EquipPayBackend.Services.UserService
 
             return loginUserDTO;
         }
+
+
     }
 }

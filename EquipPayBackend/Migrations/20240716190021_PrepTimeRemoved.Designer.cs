@@ -4,6 +4,7 @@ using EquipPayBackend.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EquipPayBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240716190021_PrepTimeRemoved")]
+    partial class PrepTimeRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,27 @@ namespace EquipPayBackend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EquipPayBackend.Models.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customers");
+                });
 
             modelBuilder.Entity("EquipPayBackend.Models.Ingredient", b =>
                 {
@@ -61,36 +85,45 @@ namespace EquipPayBackend.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ReceiptNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Id");
 
-                    b.Property<int>("RecipeId")
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("EquipPayBackend.Models.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("RecipeIngredientId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("IngredientId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserAccountId")
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecipeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserAccountId");
+                    b.HasIndex("IngredientId");
 
-                    b.HasIndex("RecipeId", "RecipeIngredientId");
+                    b.HasIndex("OrderId");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("RecipeId");
+
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("EquipPayBackend.Models.Recipe", b =>
@@ -112,9 +145,6 @@ namespace EquipPayBackend.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
 
                     b.Property<string>("TotalPrepTime")
                         .IsRequired()
@@ -264,21 +294,36 @@ namespace EquipPayBackend.Migrations
 
             modelBuilder.Entity("EquipPayBackend.Models.Order", b =>
                 {
-                    b.HasOne("EquipPayBackend.Models.UserAccount", "User")
-                        .WithMany("Orders")
-                        .HasForeignKey("UserAccountId")
+                    b.HasOne("EquipPayBackend.Models.Customer", "Customers")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EquipPayBackend.Models.RecipeIngredient", "Recipe")
+                    b.Navigation("Customers");
+                });
+
+            modelBuilder.Entity("EquipPayBackend.Models.OrderItem", b =>
+                {
+                    b.HasOne("EquipPayBackend.Models.Ingredient", "Ingredient")
                         .WithMany()
-                        .HasForeignKey("RecipeId", "RecipeIngredientId")
+                        .HasForeignKey("IngredientId");
+
+                    b.HasOne("EquipPayBackend.Models.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("EquipPayBackend.Models.Recipe", "Recipe")
+                        .WithMany()
+                        .HasForeignKey("RecipeId");
+
+                    b.Navigation("Ingredient");
+
+                    b.Navigation("Order");
 
                     b.Navigation("Recipe");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EquipPayBackend.Models.RecipeIngredient", b =>
@@ -322,6 +367,11 @@ namespace EquipPayBackend.Migrations
                     b.Navigation("UserAccount");
                 });
 
+            modelBuilder.Entity("EquipPayBackend.Models.Order", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("EquipPayBackend.Models.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
@@ -334,8 +384,6 @@ namespace EquipPayBackend.Migrations
 
             modelBuilder.Entity("EquipPayBackend.Models.UserAccount", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("UserInfo");
                 });
 #pragma warning restore 612, 618

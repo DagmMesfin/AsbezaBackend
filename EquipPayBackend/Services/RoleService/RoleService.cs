@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EquipPayBackend.Context;
+using EquipPayBackend.DTOs;
 using EquipPayBackend.DTOs.RoleDTO;
 using EquipPayBackend.Models;
 using EquipPayBackend.Services.Tools;
@@ -27,10 +28,10 @@ namespace EquipPayBackend.Services.RoleService
             await _context.SaveChangesAsync();
             return role;
         }
-        public async Task<Role> DeleteRole(string roleName)
+        public async Task<Role> DeleteRole(IdDTO DTO)
         {
             var role = await _context.Roles
-                    .Where(ro => ro.RoleName == roleName)
+                    .Where(ro => ro.RoleID == DTO.Id)
                     .FirstOrDefaultAsync();
 
             if (role == null) throw new KeyNotFoundException("Role Not Found.");

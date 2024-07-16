@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using EquipPayBackend.Context;
+using EquipPayBackend.DTOs.IngredientDTO;
+using EquipPayBackend.DTOs.RecipeDTO;
 using EquipPayBackend.DTOs.RoleDTO;
 
 //using EquipPayBackend.Data;
@@ -22,6 +24,11 @@ namespace EquipPayBackend.Utils
             // BLOG POST
             //CreateMap<AddEmployeeDTO, Employee>();
             CreateMap<AddRoleDTO, Role>();
+            CreateMap<AddIngredientDTO, Ingredient>();
+            CreateMap<UpgradeIngredientDTO, Ingredient>();
+            CreateMap<UpdateRoleDTO, Role>();
+            CreateMap<UpdateRecipeDTO, Recipe>();
+            CreateMap<AddRecipeDTO, Recipe>();
 
         }
     }

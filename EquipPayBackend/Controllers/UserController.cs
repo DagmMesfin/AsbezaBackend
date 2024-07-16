@@ -1,4 +1,5 @@
-﻿using EquipPayBackend.DTOs.UserDTO;
+﻿using EquipPayBackend.DTOs;
+using EquipPayBackend.DTOs.UserDTO;
 using EquipPayBackend.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,8 +41,8 @@ namespace EquipPayBackend.Controllers
 
 
 
-        //Get all the employees 
-        [HttpGet("GetAllEMployee")]
+        //Get all the users
+        [HttpGet("GetAllUsers")]
         public async Task<ActionResult> GetAllUsers()
         {
             try
@@ -67,8 +68,8 @@ namespace EquipPayBackend.Controllers
         }
 
         //Get a specific employee by ID
-        [HttpGet("GetSpecificEmployee")]
-        public async Task<ActionResult> GetEmployee(int id)
+        [HttpGet("GetSpecificUser")]
+        public async Task<ActionResult> GetEmployee([FromQuery] IdDTO id)
         {
             try
             {
@@ -95,12 +96,12 @@ namespace EquipPayBackend.Controllers
 
 
         //Delete an employee
-        [HttpDelete("Employee")]
-        public async Task<ActionResult> DeleteEmployee(int id)
+        [HttpDelete("User")]
+        public async Task<ActionResult> DeleteEmployee([FromQuery] IdDTO DTO)
         {
             try
             {
-                return Ok(await _userService.DeleteUser(id));
+                return Ok(await _userService.DeleteUser(DTO));
 
             }
             catch (KeyNotFoundException ex)
