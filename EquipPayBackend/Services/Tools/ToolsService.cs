@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EquipPayBackend.Models;
-using LinqToDB;
+//using LinqToDB;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,12 +10,12 @@ namespace EquipPayBackend.Services.Tools
 {
     public class ToolsService : IToolsService
     {
-        private readonly DataContext _context;
+        //private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        public ToolsService(DataContext context, IMapper mapper, IConfiguration configuration)
+        public ToolsService( IMapper mapper, IConfiguration configuration)
         {
-            _context = context;
+            //_context = context;
             _mapper = mapper;
             _configuration = configuration;
         }
@@ -69,14 +69,14 @@ namespace EquipPayBackend.Services.Tools
                 return computeHash.SequenceEqual(PasswordHash);
             }
         }
-        public string CreateToken(UserAccount UA, Employee emp)
+        public string CreateToken(UserAccount UA, UserInfo usr)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, AssignRole(emp)),
+                new Claim(ClaimTypes.Role, AssignRole(usr)),
                 new Claim(ClaimTypes.Name, UA.UserName.ToString()),
                 new Claim(ClaimTypes.Rsa, UA.Role.RoleID.ToString()),
-                new Claim(ClaimTypes.Sid, UA.EmployeeId.ToString()),
+                new Claim(ClaimTypes.Sid, UA.UserID.ToString()),
                 //new Claim(ClaimTypes.Role, UA.Role.RoleName)
                 //new Claim(ClaimTypes.Role, UA.Role.RoleID.ToString()), // Convert to string
                 //new Claim(ClaimTypes.NameIdentifier, UA.EmployeeId.ToString()) // Convert to string
@@ -93,5 +93,14 @@ namespace EquipPayBackend.Services.Tools
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
         }
+        private string AssignRole(UserInfo user)
+        {
+            Console.WriteLine($"User Role: -------------{user.UserAccount.Role.RoleName}");
+
+
+            return user.IsCurrentlyActive == true ? user.UserAccount.Role.RoleName : "UnauthorizedUserAccount";
+        }
+
+
     }
 }

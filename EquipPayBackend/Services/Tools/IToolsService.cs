@@ -7,7 +7,7 @@ namespace EquipPayBackend.Services.Tools
         int CalculateAge(DateTime birthDate);
         DateTime CalculateDOB(int age);
         void CreatePasswordHash(string Password, out byte[] PasswordHash, out byte[] PasswordSalt);
-        string CreateToken(UserAccount UA, Employee emp);
+        string CreateToken(UserAccount UA, UserInfo emp);
         string[] ReturnArrayofCommaSeparatedStrings(string inputString);
         bool VerifyPasswordHash(string Password, byte[] PasswordHash, byte[] PasswordSalt);
     }

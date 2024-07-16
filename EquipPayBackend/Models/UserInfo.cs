@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EquipPayBackend.Models
 {
@@ -13,9 +14,11 @@ namespace EquipPayBackend.Models
         public DateTime DateOfBirth { get; set; }
         public string UserGender { get; set; } = string.Empty;
         public bool IsCurrentlyActive { get; set; } = true;
-        public DateTime? DateOfTermination { get; set; }
+        public DateTime? DateOfTermination { get; set; } = null;
 
+        [ForeignKey("UserAccount")]
         public int UserAccountId { get; set; }
+
         public UserAccount? UserAccount { get; set; }
     }
 }

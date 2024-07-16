@@ -9,10 +9,13 @@ namespace EquipPayBackend.Models
         public string UserName { get; set; } = null!;
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public int EmployeeId { get; set; } // Foreign key to Employee
+        [ForeignKey("UserInfo")]
+        public int UserID { get; set; } // Foreign key to Employee
+
+        [System.Text.Json.Serialization.JsonIgnore]
         public UserInfo? UserInfo { get; set; } // Navigation property to UserInfo
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         [ForeignKey("Role")]
         public int RoleId { get; set; }
