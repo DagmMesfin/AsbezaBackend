@@ -21,6 +21,10 @@ namespace EquipPayBackend.Models
         public int RoleId { get; set; }
         public Role? Role { get; set; }
 
+        [System.Text.Json.Serialization.JsonIgnore]
+
+        public Cart Cart { get; set; } = new();
+
         public List<Order> Orders { get; set; }
     }
 }

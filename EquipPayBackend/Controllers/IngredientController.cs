@@ -4,6 +4,7 @@ using EquipPayBackend.DTOs.RoleDTO;
 using EquipPayBackend.DTOs.UserDTO;
 using EquipPayBackend.Services.IngredientService;
 using EquipPayBackend.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,8 @@ namespace EquipPayBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class IngredientController : ControllerBase
     {
 

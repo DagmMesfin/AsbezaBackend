@@ -46,6 +46,7 @@ namespace EquipPayBackend.Services.IngredientService
         public async Task<Ingredient> PostIngredient(AddIngredientDTO DTO)
         {
             var ingredient = _mapper.Map<Ingredient>(DTO);
+            ingredient.Image = DTO.Image;
             _context.Ingredients.Add(ingredient);
             await _context.SaveChangesAsync();
             return ingredient;

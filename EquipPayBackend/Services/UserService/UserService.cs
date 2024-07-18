@@ -45,7 +45,7 @@ namespace EquipPayBackend.Services.UserService
 
             var user = new UserInfo
             {
-                UserFullName = userDTO.UserName,
+                UserFullName = userDTO.UserFullName,
                 Email = userDTO.Email,
                 Phone = userDTO.Phone,
                 DateOfBirth = userDTO.DateOfBirth,
@@ -80,6 +80,7 @@ namespace EquipPayBackend.Services.UserService
                     IsCurrentlyActive = r.IsCurrentlyActive,
                     DateOfBirth = r.DateOfBirth,
                     Email = r.Email,
+                    Image = r.Image,
                     CreatedAt = r.UserAccount.CreatedAt,
                     UserName = r.UserAccount != null ? r.UserAccount.UserName : "JOHN DOE",
                     RoleName = r.UserAccount != null && r.UserAccount.Role != null ? r.UserAccount.Role.RoleName : "CUSTOMER",
@@ -145,6 +146,7 @@ namespace EquipPayBackend.Services.UserService
             user.UserInfo.Email  = userDTO.Email;
             user.UserInfo.Phone = userDTO.Phone;
             user.UserInfo.UserGender = userDTO.UserGender;
+            user.UserInfo.Image = userDTO.Image;
             //UserAccount.Password = employeeDTO.Password;
             user.Role = role;
 
@@ -177,14 +179,15 @@ namespace EquipPayBackend.Services.UserService
         {
             var user = await _context.UserAccounts
                             .Where(u => u.UserName == login.UserName)
+                            .Include(u => u.UserInfo)
                             .Include(u => u.Role)
                             .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("User Name Not found");
 
-            var userInfo = await _context.UserInfos
-                .Where(e => e.UserId == user.UserID)
-                .Include(u => u.UserAccount)
-                    .ThenInclude(r => r.Role)
-                .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Employee not found");
+            //var userInfo = await _context.UserInfos
+            //    .Where(e => e.UserId == user.UserID)
+            //    .Include(u => u.UserAccount)
+            //        .ThenInclude(r => r.Role)
+            //    .FirstOrDefaultAsync() ?? throw new KeyNotFoundException("Employee not found");
 
             if (!_toolsService.VerifyPasswordHash(login.Password, user.PasswordHash, user.PasswordSalt))
             {
@@ -193,17 +196,17 @@ namespace EquipPayBackend.Services.UserService
 
             var loginUserDTO = new DisplayUserDTO
             {
-                userID = userInfo.UserId,
-                Email = userInfo.Email,
-                Phone = userInfo.Phone,
-                DateOfBirth = userInfo.DateOfBirth,
-                userGender = userInfo.UserGender,
+                userID = user.UserInfo.UserId,
+                Email = user.UserInfo.Email,
+                Phone = user.UserInfo.Phone,
+                DateOfBirth = user.UserInfo.DateOfBirth,
+                userGender = user.UserInfo.UserGender,
                 CreatedAt = user.CreatedAt,
-                FullName = userInfo.UserFullName,
-                IsCurrentlyActive = userInfo.IsCurrentlyActive,
+                FullName = user.UserInfo.UserFullName,
+                IsCurrentlyActive = user.UserInfo.IsCurrentlyActive,
                 UserName = user.UserName,
                 RoleName = user.Role.RoleName,
-                Token = _toolsService.CreateToken(user, userInfo)
+                Token = _toolsService.CreateToken(user, user.UserInfo)
             };
 
             return loginUserDTO;

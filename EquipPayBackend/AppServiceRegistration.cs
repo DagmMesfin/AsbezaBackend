@@ -1,4 +1,6 @@
-﻿using EquipPayBackend.Services.IngredientService;
+﻿using EquipPayBackend.Services.CartService;
+using EquipPayBackend.Services.IngredientService;
+using EquipPayBackend.Services.OrdersService;
 using EquipPayBackend.Services.RecipeService;
 using EquipPayBackend.Services.RoleService;
 using EquipPayBackend.Services.Tools;
@@ -20,6 +22,8 @@ namespace EquipPayBackend
                 
                 services.AddScoped<IIngredientService, IngredientService>();
                 services.AddScoped<IRecipeService, RecipeService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ICartService, CartService>();
             }
 
         }

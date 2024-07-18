@@ -3,6 +3,7 @@ using EquipPayBackend.DTOs.IngredientDTO;
 using EquipPayBackend.DTOs.RecipeDTO;
 using EquipPayBackend.Services.IngredientService;
 using EquipPayBackend.Services.RecipeService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,8 @@ namespace EquipPayBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class RecipeController : ControllerBase
     {
         private readonly IRecipeService _recipeService;

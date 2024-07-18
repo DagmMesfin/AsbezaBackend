@@ -38,6 +38,28 @@ namespace EquipPayBackend.Context
                 .HasMany(r => r.UserAccounts)
                 .WithOne(ua => ua.Role)
                 .HasForeignKey(ua => ua.RoleId);
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Ingredient)
+                .WithMany()
+                .HasForeignKey(ci => ci.IngredientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Recipe)
+                .WithMany()
+                .HasForeignKey(ci => ci.RecipeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Ingredient)
+                .WithMany()
+                .HasForeignKey(oi => oi.IngredientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Recipe)
+                .WithMany()
+                .HasForeignKey(oi => oi.RecipeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options)
         {

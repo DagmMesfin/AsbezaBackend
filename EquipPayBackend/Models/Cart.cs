@@ -1,19 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EquipPayBackend.Models
+﻿namespace EquipPayBackend.Models
 {
     public class Cart
     {
-        [Key]
         public int Id { get; set; }
-        public bool IsPaid { get; set; }
+        public int UserId { get; set; }
+        [System.Text.Json.Serialization.JsonIgnore]
 
-        public DateTime DateTime { get; set; }
-
-        [ForeignKey("UserAccount")]
-        public int UserAccountId { get; set; }
-        public UserAccount UserAccount { get; set; }
-        public List<Recipe> Recipes { get; set; }
+        public UserAccount User { get; set; }
+        public List<CartItem> CartItems { get; set; } = new();
     }
 }

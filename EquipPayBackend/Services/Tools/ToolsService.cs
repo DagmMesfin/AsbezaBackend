@@ -74,7 +74,7 @@ namespace EquipPayBackend.Services.Tools
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Role, AssignRole(usr)),
-                new Claim(ClaimTypes.Name, UA.UserName.ToString()),
+                new Claim(ClaimTypes.Name, usr.UserFullName.ToString()),
                 new Claim(ClaimTypes.Rsa, UA.Role.RoleID.ToString()),
                 new Claim(ClaimTypes.Sid, UA.UserID.ToString()),
                 //new Claim(ClaimTypes.Role, UA.Role.RoleName)

@@ -1,9 +1,9 @@
 ﻿namespace EquipPayBackend.DTOs.CartDTO
 {
-    public class AddToCartDTO
+    public class AddIngredientToCart
     {
         public int UserId { get; set; }
-        public int? RecipeId { get; set; }
+        public int? IngredientId { get; set; }
         public int Quantity { get; set; }
     }
 }

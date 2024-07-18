@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using AutoMapper;
 using EquipPayBackend.Services.IngredientService;
 using EquipPayBackend.Services.RecipeService;
+using EquipPayBackend.Services.CartService;
+using EquipPayBackend.Services.OrdersService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IToolsService, ToolsService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 // Add Swagger services
 builder.Services.AddSwaggerGen(c =>
